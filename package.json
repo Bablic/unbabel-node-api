@@ -1,0 +1,13 @@
+{
+  "name": "unbabel-api",
+  "version": "1.0.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "author": "Ishai Jaffe",
+  "license": "MIT",
+  "dependencies": {
+    "api": "^5.0.1",
+    "json-schema-to-ts": "^2.6.0",
+    "oas": "^20.0.1"
+  }
+}

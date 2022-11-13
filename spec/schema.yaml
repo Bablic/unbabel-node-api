@@ -1,0 +1,1394 @@
+---
+openapi: 3.1.0
+info:
+  title: API Settings
+  version: '2'
+servers:
+- url: https://api.unbabel.com/tapi/v2
+components:
+  securitySchemes: {}
+security:
+- {}
+paths:
+  "/topic/":
+    get:
+      summary: "/topic/"
+      description: Get list of topics that may be applied to a translation. Specifying
+        one of these when POSTing a translation will help Unbabel choose which Editors
+        to assign to the translation based upon their experience.
+      operationId: topic
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"objects\": [\n    {\n      \"topic\": {\n        \"name\":
+                    \"politics\"\n      }\n    }, \n    {\n      \"topic\": {\n        \"name\":
+                    \"gossip\"\n      }\n    }, \n    {\n      \"topic\": {\n        \"name\":
+                    \"sex & relationships\"\n      }\n    }, \n    {\n      \"topic\":
+                    {\n        \"name\": \"crafts\"\n      }\n    }, \n    {\n      \"topic\":
+                    {\n        \"name\": \"parenting\"\n      }\n    }, \n    {\n
+                    \     \"topic\": {\n        \"name\": \"startups\"\n      }\n
+                    \   }, \n    {\n      \"topic\": {\n        \"name\": \"tech\"\n
+                    \     }\n    }, \n    {\n      \"topic\": {\n        \"name\":
+                    \"sports\"\n      }\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: politics
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/topic/
+        samples-languages:
+        - shell
+  "/translation/{uid}/":
+    get:
+      summary: GET /translation/:uid/
+      description: ''
+      operationId: get-translation-by-uid
+      parameters:
+      - name: uid
+        in: path
+        description: uid returned from the original POST or PATCH request
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \t\"balance\": 68711.0, \n  \t\"client\": \"sam\",
+                    \n  \t\"price\": 6.0, \n  \t\"source_language\": \"en\", \n  \t\"status\":
+                    \"completed\", \n  \t\"target_language\": \"pt\", \n  \t\"text\":
+                    \"Translation 1\", \n  \t\"text_format\": \"text\", \n  \t\"translatedText\":
+                    \"Tradução 1\", \n  \t\"uid\": \"f94ec485db\"\n}"
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: integer
+                    example: 68711
+                    default: 0
+                  client:
+                    type: string
+                    example: sam
+                  price:
+                    type: integer
+                    example: 6
+                    default: 0
+                  source_language:
+                    type: string
+                    example: en
+                  status:
+                    type: string
+                    example: completed
+                  target_language:
+                    type: string
+                    example: pt
+                  text:
+                    type: string
+                    example: Translation 1
+                  text_format:
+                    type: string
+                    example: text
+                  translatedText:
+                    type: string
+                    example: Tradução 1
+                  uid:
+                    type: string
+                    example: f94ec485db
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  "/language_pair/":
+    get:
+      summary: "/language_pair/"
+      description: Fetch all language pairs supported by Unbabel.
+      operationId: language_pair
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"objects\": [\n  \t{\n      \"lang_pair\": {\n       \"source_language\":
+                    {\n         \"name\": \"Portuguese\", \n         \"shortname\":
+                    \"pt\"\n       }, \n      \"target_language\": {\n        \"name\":
+                    \"English\", \n        \"shortname\": \"en\"}\n      }\n    },
+                    (...)\n }"
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/language_pair/
+          name: curl
+        samples-languages:
+        - shell
+  "/translation/":
+    patch:
+      summary: "/translation/"
+      description: Exactly the same as POST but there is a new top-level key in the
+        request data called "objects" which contains an array of translation requests.
+      operationId: translation-1
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - objects
+              properties:
+                objects:
+                  type: array
+                  description: An array of dictionaries with the same data as a POST
+                    Request to /translation/
+                  items:
+                    type: mixed type
+      responses:
+        '202':
+          description: '202'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: |-
+                    {
+                        "objects": [
+                            {
+                                "order_number": 27,
+                                "price": 6,
+                                "source_language": "en",
+                                "status": "new",
+                                "target_language": "de",
+                                "text": "Text to translate",
+                                "text_format": "text",
+                                "uid": "b65f94ebf9"
+                            },
+                            {
+                                "order_number": 28,
+                                "price": 6,
+                                "source_language": "en",
+                                "status": "new",
+                                "target_language": "de",
+                                "text": "Text to translate",
+                                "text_format": "text",
+                                "uid": "9810e0ab64"
+                            }
+                        ]
+                    }
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        order_number:
+                          type: integer
+                          example: 27
+                          default: 0
+                        price:
+                          type: integer
+                          example: 6
+                          default: 0
+                        source_language:
+                          type: string
+                          example: en
+                        status:
+                          type: string
+                          example: new
+                        target_language:
+                          type: string
+                          example: de
+                        text:
+                          type: string
+                          example: Text to translate
+                        text_format:
+                          type: string
+                          example: text
+                        uid:
+                          type: string
+                          example: b65f94ebf9
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: "#!/bin/bash\ncurl -v -H \"Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY\"
+            \\\n        -H \"Content-Type: application/json\" \\\n        -X PATCH
+            https://api.unbabel.com/tapi/v2/translation/ \\\n        -d '{\n        \t\t\t\t\"objects\":
+            [\n                \t\t{\n        \t            \t\"source_language\":
+            \"en\",\n\t\t\t\t\t\t\t\t        \"target_language\": \"de\",\n\t\t\t\t\t\t\t\t
+            \       \"text\": \"Text to translate\",\n       \t\t\t\t\t\t\t\t\t\"text_format\":
+            \"text\"\n                    },\n                   \t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"source_language\":
+            \"en\",\n\t\t\t\t\t\t\t\t        \"target_language\": \"de\",\n\t\t\t\t\t\t\t\t
+            \       \"text\": \"Text to translate\",\n       \t\t\t\t\t\t\t\t\t\"text_format\":
+            \"text\"\n                    }\n                ]\n            }'"
+        samples-languages:
+        - shell
+    post:
+      summary: "/translation/"
+      description: Create translation jobs
+      operationId: translation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - text
+              - source_language
+              - target_language
+              properties:
+                text:
+                  type: string
+                  description: UTF-8 encoding is preferred.
+                source_language:
+                  type: string
+                  description: If not supplied will be auto-detected. Language detection
+                    is not 100% accurate so please supply this field if possible!
+                target_language:
+                  type: string
+                  description: Language shortname. See the language_pair endpoint
+                    for available languages and their shortnames.
+                text_format:
+                  type: string
+                  description: You can choose from "text", "html", "srt", "xliff",
+                    "base64/text", "base64/html" or "base64/xliff"
+                  default: text
+                uid:
+                  type: string
+                  description: You can specify an ID for a particular translation.
+                    Note that it has to be unique.
+                callback_url:
+                  type: string
+                  description: If supplied we will POST the translation back to this
+                    URL when it is complete.
+                brand:
+                  type: string
+                  description: Enter the external identifier of a Brand or omit to
+                    use the brand default
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"order_number\": 1.0,\n    \"price\": 0.0, \n    \"source_language\":
+                    \"en\", \n    \"status\": \"new\", \n    \"target_language\":
+                    \"pt\", \n    \"text\": \"Text to be translated\", \n    \"text_format\":
+                    \"text\", \n    \"uid\": \"9a86cf619f\"\n}"
+              schema:
+                type: object
+                properties:
+                  order_number:
+                    type: integer
+                    example: 1
+                    default: 0
+                  price:
+                    type: integer
+                    example: 0
+                    default: 0
+                  source_language:
+                    type: string
+                    example: en
+                  status:
+                    type: string
+                    example: new
+                  target_language:
+                    type: string
+                    example: pt
+                  text:
+                    type: string
+                    example: Text to be translated
+                  text_format:
+                    type: string
+                    example: text
+                  uid:
+                    type: string
+                    example: 9a86cf619f
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X POST https://api.unbabel.com/tapi/v2/translation/ \
+                    -d '{
+                            "text": "Text to be translated",
+                            "source_language": "en",
+                            "target_language": "pt"
+                        }'
+        samples-languages:
+        - shell
+    get:
+      summary: "/translation/"
+      description: Get jobs with a specific status
+      operationId: translation-list-update
+      parameters:
+      - name: ":uid"
+        in: query
+        schema:
+          type: string
+      - name: ":status"
+        in: query
+        description: 'Acceptable status: "new", "translating", "completed", "failed",
+          "canceled", "accepted", "rejected"'
+        schema:
+          type: string
+      - name: source_language
+        in: query
+        schema:
+          type: string
+      - name: target_language
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"meta\": {\n        \"limit\": 20, \n        \"next\":
+                    null, \n        \"offset\": 0, \n        \"previous\": null, \n
+                    \       \"total_count\": 3\n    }, \n    \"objects\": [\n        {\n
+                    \           \"order_number\": 1,\n          \t\"price\": 0.0,\n
+                    \           \"source_language\": \"en\", \n            \"status\":
+                    \"new\", \n            \"target_language\": \"pt\", \n            \"text_format\":
+                    \"text\", \n            \"uid\": \"30292308e7\"\n        }, (...)\n
+                    \   ]\n}"
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/translation/
+          name: Curl (list all)
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://unbabel.com/tapi/v2/translation/?target_language__in=["pt", "es]
+          name: Curl (filter per target language)
+        samples-languages:
+        - shell
+  "/tone/":
+    get:
+      summary: "/tone/"
+      description: Get all possible tones that a translation may have. Editors will
+        take the tone into account and possibly use it to change the formality of
+        the translation.
+      operationId: tone
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"objects\": [\n    {\n      \"tone\": {\n       \"description\":
+                    \"Informal style\", \n       \"name\": \"Informal\"\n     }\n
+                    \   },\n    {\n      \"tone\": {\n        \"description\": \"Formal
+                    style\", \n        \"name\": \"Formal\"\n      }\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tone:
+                          type: object
+                          properties:
+                            description:
+                              type: string
+                              example: Informal style
+                            name:
+                              type: string
+                              example: Informal
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/tone/
+        samples-languages:
+        - shell
+  "/translation/?status={status}":
+    get:
+      summary: GET /translation/?status=:status
+      description: ''
+      operationId: get-translation-by-status
+      parameters:
+      - name: status
+        in: path
+        description: Check the table below for acceptable status'
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"objects\" : [\n    {\n  \t\t\"balance\": 68711.0,
+                    \n  \t\t\"client\": \"sam\", \n  \t\t\"price\": 6.0, \n  \t\t\"source_language\":
+                    \"en\", \n  \t\t\"status\": \"completed\", \n  \t\t\"target_language\":
+                    \"pt\", \n  \t\t\"text\": \"Translation 1\", \n  \t\t\"text_format\":
+                    \"text\", \n  \t\t\"translatedText\": \"Tradução 1\", \n  \t\t\"uid\":
+                    \"f94ec485db\"\n\t\t},\n   \t{\n  \t\t\"balance\": 68705.0, \n
+                    \ \t\t\"client\": \"sam\", \n  \t\t\"price\": 6.0, \n  \t\t\"source_language\":
+                    \"en\", \n  \t\t\"status\": \"completed\", \n  \t\t\"target_language\":
+                    \"pt\", \n  \t\t\"text\": \"Translation 2\", \n  \t\t\"text_format\":
+                    \"text\", \n  \t\t\"translatedText\": \"Tradução 1\", \n  \t\t\"uid\":
+                    \"f94ec485dbsadf\"\n\t\t}\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        balance:
+                          type: integer
+                          example: 68711
+                          default: 0
+                        client:
+                          type: string
+                          example: sam
+                        price:
+                          type: integer
+                          example: 6
+                          default: 0
+                        source_language:
+                          type: string
+                          example: en
+                        status:
+                          type: string
+                          example: completed
+                        target_language:
+                          type: string
+                          example: pt
+                        text:
+                          type: string
+                          example: Translation 1
+                        text_format:
+                          type: string
+                          example: text
+                        translatedText:
+                          type: string
+                          example: Tradução 1
+                        uid:
+                          type: string
+                          example: f94ec485db
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  "/wordcount/":
+    post:
+      summary: "/wordcount/"
+      description: Count words on a text
+      operationId: post-wordcount
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - text
+              properties:
+                text:
+                  type: string
+                  description: From where we will be counting all the words
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: |-
+                    {
+                      "word_count": 4
+                    }
+              schema:
+                type: object
+                properties:
+                  word_count:
+                    type: integer
+                    example: 4
+                    default: 0
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X POST https://api.unbabel.com/tapi/v2/wordcount/ \
+                    -d '{
+                            "text": "Text to be translated"
+                        }'
+        samples-languages:
+        - shell
+  "/report/:report_id/":
+    get:
+      summary: "/report/:report_id/"
+      description: Get a job report
+      operationId: get-reportuid
+      parameters:
+      - name: ":report_id"
+        in: query
+        description: ID of the report that you want to get information about
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"changed\": \"2015-07-10T14:28:02.825000\", \n  \"comments\":
+                    [\n    {\n      \"commenter\": {\n        \"name\": \"Alice Wonder\",
+                    \n        \"picture_url\": \"https://secure.gravatar.com/avatar/(...)\",
+                    \n        \"username\": \"alice\"\n      }, \n      \"created\":
+                    \"6 hours ago\", \n      \"event\": \"job_reported\", \n      \"text\":
+                    \"This job has a few translation mistakes, I want to report it\"\n
+                    \   }\n  ], \n  \"created\": \"2015-07-10T11:10:12.686000\", \n
+                    \ \"editor\": \"albuquerque.a.andre\", \n  \"uid\": \"3b0f609330\",
+                    \n  \"report_id\": \"55a3a1e7421aa9e1c4fb880d\", \n  \"status\":
+                    \"open\", \n  \"types\": [\n    \"grammar\", \"spelling\", \"inconsistencies\",
+                    \"missing_text\", \"other\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  changed:
+                    type: string
+                    example: '2015-07-10T14:28:02.825000'
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        commenter:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Alice Wonder
+                            picture_url:
+                              type: string
+                              example: https://secure.gravatar.com/avatar/(...)
+                            username:
+                              type: string
+                              example: alice
+                        created:
+                          type: string
+                          example: 6 hours ago
+                        event:
+                          type: string
+                          example: job_reported
+                        text:
+                          type: string
+                          example: This job has a few translation mistakes, I want
+                            to report it
+                  created:
+                    type: string
+                    example: '2015-07-10T11:10:12.686000'
+                  editor:
+                    type: string
+                    example: albuquerque.a.andre
+                  uid:
+                    type: string
+                    example: 3b0f609330
+                  report_id:
+                    type: string
+                    example: 55a3a1e7421aa9e1c4fb880d
+                  status:
+                    type: string
+                    example: open
+                  types:
+                    type: array
+                    items:
+                      type: string
+                      example: grammar
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/report/:report_id \
+        samples-languages:
+        - shell
+  "/report/{report_id}/accept":
+    patch:
+      summary: "/report/:report_id/accept"
+      description: Accept job after being reported
+      operationId: patch-reportuidaccept
+      parameters:
+      - name: report_id
+        in: path
+        description: The id of the report that you want to accept
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: '202'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"changed\": \"2015-07-13T11:33:22.313000\", \n  \"comments\":
+                    [\n    {\n      \"commenter\": {\n        \"name\": \"Alice Wonder\",
+                    \n        \"picture_url\": \"https://secure.gravatar.com/avatar/(...)\",
+                    \n        \"username\": \"alice\"\n      }, \n      \"created\":
+                    \"26 seconds ago\", \n      \"event\": \"job_reported\", \n      \"text\":
+                    \"This job has a few translation mistakes, I want to report it\"\n
+                    \   },\n    {\n      \"commenter\": {\n        \"name\": \"Alice
+                    Wonder\", \n        \"picture_url\": \"https://secure.gravatar.com/avatar/(...)\",
+                    \n        \"username\": \"alice\"\n      }, \n      \"created\":
+                    \"now\", \n      \"event\": \"job_report_approved\", \n      \"text\":
+                    \"\"\n    }\n  ], \n  \"created\": \"2015-07-13T11:32:55.580000\",
+                    \n  \"editor\": \"a.mattiace\", \n  \"uid\": \"3b0f609330\", \n
+                    \ \"report_id\": \"55a3a1e7421aa9e1c4fb880d\", \n  \"status\":
+                    \"close\", \n  \"types\": [\n    \"grammar\", \"spelling\", \"inconsistencies\",
+                    \"missing_text\", \"other\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  changed:
+                    type: string
+                    example: '2015-07-13T11:33:22.313000'
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        commenter:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Alice Wonder
+                            picture_url:
+                              type: string
+                              example: https://secure.gravatar.com/avatar/(...)
+                            username:
+                              type: string
+                              example: alice
+                        created:
+                          type: string
+                          example: 26 seconds ago
+                        event:
+                          type: string
+                          example: job_reported
+                        text:
+                          type: string
+                          example: This job has a few translation mistakes, I want
+                            to report it
+                  created:
+                    type: string
+                    example: '2015-07-13T11:32:55.580000'
+                  editor:
+                    type: string
+                    example: a.mattiace
+                  uid:
+                    type: string
+                    example: 3b0f609330
+                  report_id:
+                    type: string
+                    example: 55a3a1e7421aa9e1c4fb880d
+                  status:
+                    type: string
+                    example: close
+                  types:
+                    type: array
+                    items:
+                      type: string
+                      example: grammar
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X PATCH https://api.unbabel.com/tapi/v2/report/:report_id/accept/ \
+        samples-languages:
+        - shell
+  "/report/{report_id}/":
+    patch:
+      summary: "/report/:report_id/"
+      description: Add a comment to a particular job report
+      operationId: patch-reportuid
+      parameters:
+      - name: report_id
+        in: path
+        description: The ID of the report that you want to add a comment as a customer
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - comment
+              properties:
+                comment:
+                  type: string
+                  description: Comment to add to the report
+      responses:
+        '202':
+          description: '202'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"changed\": \"2015-07-10T14:28:02.825000\", \n  \"comments\":
+                    [\n    {\n      \"commenter\": {\n        \"name\": \"Alice Wonder\",
+                    \n        \"picture_url\": \"https://secure.gravatar.com/avatar/(...)\",
+                    \n        \"username\": \"alice\"\n      }, \n      \"created\":
+                    \"6 hours ago\", \n      \"event\": \"job_reported\", \n      \"text\":
+                    \"This job has a few translation mistakes, I want to report it\"\n
+                    \   }, \n    {\n      \"commenter\": {\n        \"name\": \"Alice
+                    Wonder\", \n        \"picture_url\": \"https://secure.gravatar.com/avatar/(...)\",
+                    \n        \"username\": \"alice\"\n      }, \n      \"created\":
+                    \"6 hours ago\", \n      \"event\": \"customer_comment\", \n      \"text\":
+                    \"It now looks better but there is still a mistake\"\n    }\n
+                    \ ], \n  \"created\": \"2015-07-10T11:10:12.686000\", \n  \"editor\":
+                    \"albuquerque.a.andre\", \n  \"uid\": \"3b0f609330\", \n  \"report_id\":
+                    \"55a3a1e7421aa9e1c4fb880d\", \n  \"status\": \"open\", \n  \"types\":
+                    [\n    \"grammar\", \"spelling\", \"inconsistencies\", \"missing_text\",
+                    \"other\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  changed:
+                    type: string
+                    example: '2015-07-10T14:28:02.825000'
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        commenter:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Alice Wonder
+                            picture_url:
+                              type: string
+                              example: https://secure.gravatar.com/avatar/(...)
+                            username:
+                              type: string
+                              example: alice
+                        created:
+                          type: string
+                          example: 6 hours ago
+                        event:
+                          type: string
+                          example: job_reported
+                        text:
+                          type: string
+                          example: This job has a few translation mistakes, I want
+                            to report it
+                  created:
+                    type: string
+                    example: '2015-07-10T11:10:12.686000'
+                  editor:
+                    type: string
+                    example: albuquerque.a.andre
+                  uid:
+                    type: string
+                    example: 3b0f609330
+                  report_id:
+                    type: string
+                    example: 55a3a1e7421aa9e1c4fb880d
+                  status:
+                    type: string
+                    example: open
+                  types:
+                    type: array
+                    items:
+                      type: string
+                      example: grammar
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X PATCH https://api.unbabel.com/tapi/v2/report/:report_id \
+                    -d '{
+                            "comment": "It now looks better but there is still a mistake",
+                        }'
+        samples-languages:
+        - shell
+  "/report/":
+    post:
+      summary: "/report/"
+      description: Allows you to report a job because of possible translation mistakes
+      operationId: report
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - uid
+              - comment
+              - type
+              - callback_url
+              properties:
+                uid:
+                  type: string
+                  description: UID of the job that you want report
+                comment:
+                  type: string
+                  description: Comment explaining why this job is being reported
+                type:
+                  type: array
+                  description: One or more (up to five) types of possible errors with
+                    this report. You can choose from the array in the example
+                  items:
+                    type: string
+                callback_url:
+                  type: string
+                  description: URL to call to receive a notification when an Editor
+                    replies to the report
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"created\": \"2015-07-10T11:10:12.686000\", \n  \"changed\":
+                    \"2015-07-10T14:28:02.825000\", \n  \"comments\": [\n    {\n      \"commenter\":
+                    {\n        \"name\": \"Alice Wonder\", \n        \"picture_url\":
+                    \"https://secure.gravatar.com/avatar/(...)\", \n        \"username\":
+                    \"alice\"\n      }, \n      \"created\": \"6 hours ago\", \n      \"event\":
+                    \"job_reported\", \n      \"text\": \"This translation has a few
+                    mistakes, I want to report it\"\n    },\n  ], \n  \"editor\":
+                    \"albuquerque.a.andre\", \n  \"uid\": \"3b0f609330\", \n  \"report_id\":
+                    \"55a3a1e7421aa9e1c4fb880d\", \n  \"status\": \"open\", \n  \"types\":
+                    [\n    \"grammar\", \"spelling\", \"inconsistencies\", \"missing_text\",
+                    \"other\"\n  ]\n}"
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X POST https://api.unbabel.com/tapi/v2/report/ \
+                    -d '{
+                            "uid": "3b0f609330",
+                            "comment": "This translation has a few mistakes, I want to report it",
+                            "callback_url": "http://your-cool-app.com/unbabel_callback/",
+                            "types": ["grammar", "spelling", "inconsistencies", "missing_text", "other"]
+                        }'
+        samples-languages:
+        - shell
+  "/translation/:{uid}/":
+    get:
+      summary: "/translation/:uid/"
+      description: Get a translation job by its uid
+      operationId: translation-detail
+      parameters:
+      - name: "uid"
+        in: path
+        description: UID returned from the original POST or PATCH request
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"balance\": 2682.0, \n    \"client\": \"username\",
+                    \n    \"price\": 12.0, \n    \"source_language\": \"en\", \n    \"status\":
+                    \"new\", \n    \"target_language\": \"pt\", \n    \"text\": \"The
+                    quick brown fox\", \n    \"text_format\": \"text\", \n    \"uid\":
+                    \"f2f7a62ca5\"\n}"
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: integer
+                    example: 2682
+                    default: 0
+                  client:
+                    type: string
+                    example: username
+                  price:
+                    type: integer
+                    example: 12
+                    default: 0
+                  source_language:
+                    type: string
+                    example: en
+                  status:
+                    type: string
+                    example: new
+                  target_language:
+                    type: string
+                    example: pt
+                  text:
+                    type: string
+                    example: The quick brown fox
+                  text_format:
+                    type: string
+                    example: text
+                  uid:
+                    type: string
+                    example: f2f7a62ca5
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/translation/:uid/
+        samples-languages:
+        - shell
+  "/mt_translation/":
+    post:
+      summary: "/mt_translation/"
+      description: Create machine translation only jobs
+      operationId: mt_translation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - text
+              - source_language
+              - target_language
+              properties:
+                text:
+                  type: string
+                  description: UTF-8 encoding is preferred.
+                source_language:
+                  type: string
+                  description: If not supplied will be auto-detected. Language detection
+                    is not 100% accurate so please supply this field if possible!
+                target_language:
+                  type: string
+                  description: Language shortname. See the language_pair endpoint
+                    for available languages and their shortnames.
+                text_format:
+                  type: string
+                  description: You can choose from "text", "html", "srt", "xliff",
+                    "base64/text", "base64/html" or "base64/xliff"
+                  default: text
+                uid:
+                  type: string
+                  description: You can specify an ID for a particular translation.
+                    Note that it has to be unique.
+                callback_url:
+                  type: string
+                  description: If supplied we will POST the translation back to this
+                    URL when it is complete.
+                brand:
+                  type: string
+                  description: Enter the external identifier of a Brand or omit to
+                    use the brand default
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n\t\t\"origin\": \"api\",\n  \t\"source_language\": \"en\",\n
+                    \ \t\"status\": \"machine_translate_in_progress\",\n  \t\"target_language\":
+                    \"pt\",\n  \t\"text\": \"Hello, world\",\n  \t\"text_format\":
+                    \"text\",\n  \t\"uid\": \"329165fca4\"\n}"
+              schema:
+                type: object
+                properties:
+                  origin:
+                    type: string
+                    example: api
+                  source_language:
+                    type: string
+                    example: en
+                  status:
+                    type: string
+                    example: machine_translate_in_progress
+                  target_language:
+                    type: string
+                    example: pt
+                  text:
+                    type: string
+                    example: Hello, world
+                  text_format:
+                    type: string
+                    example: text
+                  uid:
+                    type: string
+                    example: 329165fca4
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl \
+              -H "Authorization: ApiKey username:apikey" \
+              -H "Content-Type: application/json" \
+              -X POST https://api.unbabel.com/tapi/v2/mt_translation/ \
+              -d '{ "text": "Hello, world", "source_language": "en", "target_language": "pt"}'
+        samples-languages:
+        - shell
+    get:
+      summary: "/mt_translation/"
+      description: Get machine translation jobs with a specific status
+      operationId: mt_translation-1
+      parameters:
+      - name: ":uid"
+        in: query
+        schema:
+          type: string
+      - name: ":status"
+        in: query
+        description: 'Acceptable status: "new", "translating", "completed", "failed",
+          "canceled"'
+        schema:
+          type: string
+      - name: source_language
+        in: query
+        schema:
+          type: string
+      - name: target_language
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"meta\": {\n        \"limit\": 20, \n        \"next\":
+                    null, \n        \"offset\": 0, \n        \"previous\": null, \n
+                    \       \"total_count\": 3\n    }, \n    \"objects\": [\n        {\n
+                    \           \"price\": 0.0, \n            \"source_language\":
+                    \"en\", \n            \"status\": \"new\", \n            \"target_language\":
+                    \"pt\", \n            \"text_format\": \"text\", \n            \"uid\":
+                    \"30292308e7\"\n        }, (...)\n    ]\n}"
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl \
+              -H "Authorization: ApiKey username:apikey" \
+              -X GET https://api.unbabel.com/tapi/v2/mt_translation/329165
+          name: Curl (list all)
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://unbabel.com/tapi/v2/translation/?target_language__in=["pt", "es]
+          name: Curl (filter per target language)
+        samples-languages:
+        - shell
+  "/mt_translation/:uid/":
+    get:
+      summary: "/mt_translation/:uid/"
+      description: Get a machine translation job by its uid
+      operationId: mt_translationuid
+      parameters:
+      - name: ":uid"
+        in: query
+        description: Uid returned from the original POST request
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{  \n    \"price\": 0.0, \n    \"source_language\": \"en\",
+                    \n    \"status\": \"new\", \n    \"target_language\": \"pt\",
+                    \n    \"text\": \"The quick brown fox\", \n    \"text_format\":
+                    \"text\", \n    \"uid\": \"f2f7a62ca5\"\n}"
+              schema:
+                type: object
+                properties:
+                  price:
+                    type: integer
+                    example: 0
+                    default: 0
+                  source_language:
+                    type: string
+                    example: en
+                  status:
+                    type: string
+                    example: new
+                  target_language:
+                    type: string
+                    example: pt
+                  text:
+                    type: string
+                    example: The quick brown fox
+                  text_format:
+                    type: string
+                    example: text
+                  uid:
+                    type: string
+                    example: f2f7a62ca5
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{}"
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: shell
+          code: |-
+            #!/bin/bash
+            curl -v -H "Authorization: ApiKey $UNBABEL_USERNAME:$UNBABEL_API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -X GET https://api.unbabel.com/tapi/v2/translation/:uid/
+        samples-languages:
+        - shell
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+  samples-enabled: true
+x-readme-fauxas: true
+
